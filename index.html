@@ -103,6 +103,12 @@ h2+p.note{margin:0 0 18px;color:var(--muted);font-size:14px}
 .first .why{margin-top:14px;padding-top:12px;border-top:1px dashed #e0cba0;
   font-size:13.5px;color:#6b5a38}
 
+/* ---- 次から出さない ---- */
+.skip{display:flex;align-items:center;justify-content:center;gap:8px;
+  max-width:420px;margin:0 auto 10px;padding:9px 12px;
+  font-size:13.5px;color:var(--muted);cursor:pointer}
+.skip input{width:18px;height:18px;accent-color:var(--accent)}
+
 /* ---- 足 ---- */
 footer{margin:46px 0 34px;text-align:center;font-size:12.5px;color:var(--muted);line-height:2}
 </style>
@@ -123,6 +129,8 @@ footer{margin:46px 0 34px;text-align:center;font-size:12.5px;color:var(--muted);
     地図をひらく
     <small>Googleでログインします。はじめての方は下の「はじめての方へ」を先に</small>
   </a>
+  <label class="skip"><input type="checkbox" id="skip">
+    次からは、この画面を出さずに地図をひらく</label>
   <p class="under">メンバー向けです。合言葉はLINEにあります。</p>
 
   <div class="nums">
@@ -132,13 +140,13 @@ footer{margin:46px 0 34px;text-align:center;font-size:12.5px;color:var(--muted);
   </div>
 
   <section>
-    <h2>知らないと、現地で詰みます</h2>
+    <h2>先に知っておきたいこと</h2>
     <p class="note">実際に申請して飛ばした人が書いた話が、そのまま入っています。</p>
 
     <div class="trap">
       <b>千畳敷カール（中央アルプス）</b>
       <p class="p">燃料式のドローンと、本体やバッテリーが大きい機体は、ロープウェイに乗せられません。</p>
-      <p>知らずに行くと、標高2,600mまで上がってから詰みます。入林届は南信森林管理署、連絡書は中央アルプス観光へ。書類は2本立てです。</p>
+      <p>これを知らずに行くと、標高2,600mまで上がってから引き返すことになります。入林届は南信森林管理署、連絡書は中央アルプス観光へ。書類は2本立てです。</p>
       <p class="who">2026年7月に実際に飛ばした記録より</p>
     </div>
 
@@ -215,9 +223,34 @@ footer{margin:46px 0 34px;text-align:center;font-size:12.5px;color:var(--muted);
   <footer>
     空撮ロケハン支援ツール<br>
     空域データ：国土交通省航空局・警察庁（国土地理院が配信）／送電線：OpenStreetMap<br>
-    <b>最後は必ず <a href="https://www.dips-reg.mlit.go.jp/" style="color:var(--accent-d)">DIPS</a> で確かめてください。</b>
+    <b>最後は必ず <a href="https://www.dips-reg.mlit.go.jp/" style="color:var(--accent-d)">DIPS</a> で確かめてください。</b><br>
+    <span style="opacity:.8">この画面を出さない設定にしたあと、また見たいときは
+    <a href="?top=1" style="color:var(--accent-d)">?top=1</a> を付けて開いてください。</span>
   </footer>
 
 </div>
+
+<script>
+/* よく使う人が、毎回この画面を通らずに済むようにする。
+   ------------------------------------------------------------
+   はじめての人には説明が要るが、慣れた人には邪魔になる。
+   「次から出さない」に印を付けた人だけ、次からは地図へ直に送る。
+   勝手に飛ばすと驚かせるので、自分で選んだときだけにしてある。
+   また見たいときは ?top=1 を付ければ、ここに留まる。 */
+(function(){
+  var 地図 = document.querySelector('a.go').href;
+  var 印   = document.getElementById('skip');
+  var 留まる = location.search.indexOf('top=1') >= 0;
+  var 覚え;
+  try { 覚え = localStorage.getItem('すぐ地図'); } catch (e) { 覚え = null; }
+
+  if (覚え === '1' && !留まる) { location.replace(地図); return; }
+
+  印.checked = (覚え === '1');
+  印.addEventListener('change', function(){
+    try { localStorage.setItem('すぐ地図', 印.checked ? '1' : '0'); } catch (e) {}
+  });
+})();
+</script>
 </body>
 </html>
