@@ -93,7 +93,11 @@ h2+p.note{margin:0 0 18px;color:var(--muted);font-size:14px}
 .vids img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
 .vids span{display:block;padding:7px 10px;font-size:12.5px;line-height:1.5}
 
-/* ---- はじめての人 ---- */
+/* ---- はじめての人。いちばん上に置いてある ---- */
+.first-sec{margin-top:30px}
+.first .alert{margin:0 0 12px;padding:12px 14px;background:#fff;
+  border:2px solid var(--warn);border-radius:10px;
+  font-size:15.5px;line-height:1.8;color:#7a4f10}
 .first{background:var(--warn-bg);border:1px solid #e8d5ae;border-radius:14px;padding:18px 20px}
 .first h3{margin:0 0 10px;font-size:17px;color:var(--warn)}
 .first ol{margin:0;padding-left:1.4em}
@@ -127,10 +131,11 @@ footer{margin:46px 0 34px;text-align:center;font-size:12.5px;color:var(--muted);
 
   <a class="go" href="https://script.google.com/macros/s/AKfycbyfw2BBJGIAg-DFxko3UxaUt0eqhL2aaoSiE_jznkQiCfCYPQ6z_J8ezU6eO8598CI/exec">
     地図をひらく
-    <small>Googleでログインします。はじめての方は下の「はじめての方へ」を先に</small>
+    <small>Googleでログインします。はじめての方は、下の「はじめての方へ」を先にお読みください</small>
   </a>
   <label class="skip"><input type="checkbox" id="skip">
-    次からは、この画面を出さずに地図をひらく</label>
+    次からは、この画面を出さずに地図をひらく<br>
+    <span style="font-size:12px;opacity:.8">（ひと月に一度だけ、この画面が出ます）</span></label>
   <p class="under">メンバー向けです。合言葉はLINEにあります。</p>
 
   <div class="nums">
@@ -139,29 +144,70 @@ footer{margin:46px 0 34px;text-align:center;font-size:12.5px;color:var(--muted);
     <div><b>7</b><span>種類の空域を自動判定</span></div>
   </div>
 
+  <!-- ============================================================
+       このごろの話
+
+       ここは月に一度くらい書き替える。
+       「次からこの画面を出さない」にした人にも、
+       ひと月たつと一度だけ出るようにしてあるので、
+       ここが古いままだと、わざわざ出した意味がなくなる。
+
+       書くのは3つまで。多いと読まれない。
+       ・場所が増えた／機能が増えた
+       ・拾いもの（知らないと損をする話）
+       ============================================================ -->
+  <!-- ============================================================
+       はじめての方へ
+
+       ★ここは、いちばん上に置くこと。
+       まだログインしていない人は、操作に慣れていない年配の方が多い。
+       いちばん下に置いても、そこまでたどり着かない。
+       ============================================================ -->
+  <section class="first-sec">
+    <h2>はじめての方へ</h2>
+    <p class="note">入るまでに、少しつまずくところがあります。先にここだけ読んでください。</p>
+    <div class="first">
+      <p class="alert">途中で <b>赤い警告</b> が出ますが、こわれてはいません。<br>
+        <b>2回押せば越えられます。</b></p>
+      <ol>
+        <li>下の<span class="k">地図をひらく</span>を押します</li>
+        <li>Googleでログインします。<b>ふだん使っているアカウント</b>で構いません</li>
+        <li><b>「このアプリは Google で確認されていません」</b>と赤い字が出たら<br>
+            <span class="k">詳細</span> を押す → 下に出てくる
+            <span class="k">気軽に空撮＆練習マップ（安全ではないページ）に移動</span> を押す</li>
+        <li>アクセスを求められたら <span class="k">許可</span></li>
+        <li>合言葉を入れます（LINEにあります）</li>
+      </ol>
+      <p class="why"><b>なぜ赤い警告が出るのか。</b>
+        仲間内だけで使う道具なので、Googleの審査を通していないからです。
+        審査には会社の登録や年ごとの費用が要ります。
+        中身は Google のサーバーで動いていて、書いたものはみんなの表に入るだけです。</p>
+      <p class="why"><b>うまくいかないときは、遠慮なく聞いてください。</b>
+        ひとりで粘らないでください。集まりのときに、その場で入れることもできます。</p>
+    </div>
+  </section>
+
   <section>
-    <h2>先に知っておきたいこと</h2>
-    <p class="note">実際に申請して飛ばした人が書いた話が、そのまま入っています。</p>
+    <h2>このごろの話</h2>
+    <p class="note">2026年8月</p>
 
     <div class="trap">
-      <b>千畳敷カール（中央アルプス）</b>
+      <b>場所が 73 か所になりました</b>
+      <p>ほっしーが集めてくれた確認リストから39か所、投稿フォームから8か所。
+         どこへ何を出すか、電話したら何と言われたかまで、窓口ごとに入っています。</p>
+    </div>
+
+    <div class="trap">
+      <b>送電線が出るようになりました</b>
+      <p>黒い線が送電線です。ぶつければ、その場で終わりです。
+         ただし有志のデータなので抜けがあります。線が無いから安全とは思わないでください。</p>
+    </div>
+
+    <div class="trap">
+      <b>拾いもの — 千畳敷カール</b>
       <p class="p">燃料式のドローンと、本体やバッテリーが大きい機体は、ロープウェイに乗せられません。</p>
-      <p>これを知らずに行くと、標高2,600mまで上がってから引き返すことになります。入林届は南信森林管理署、連絡書は中央アルプス観光へ。書類は2本立てです。</p>
-      <p class="who">2026年7月に実際に飛ばした記録より</p>
-    </div>
-
-    <div class="trap">
-      <b>諏訪湖（赤砂崎公園・みずべ公園）</b>
-      <p class="p">許可証は発行されません。書類が受理された時点で承認、という扱いです。</p>
-      <p>「許可証が届かない」と待っていると、当日を過ぎます。費用は使用料1,100円＋振込手数料165円＋郵送430円で、およそ1,700円。</p>
-      <p class="who">2026年7月に実際に飛ばした記録より</p>
-    </div>
-
-    <div class="trap">
-      <b>犬吠埼灯台（千葉）</b>
-      <p class="p">灯台の上は飛ばせません。海上保安庁の管轄だと言われたそうです。</p>
-      <p>浜辺からなら飛ばせます。こういう「行ってみて言われたこと」が、いちばん値打ちがあります。</p>
-      <p class="who">メンバーの投稿より</p>
+      <p>これを知らずに行くと、標高2,600mまで上がってから引き返すことになります。
+         こういう「行ってみて言われたこと」が、この地図でいちばん値打ちのあるところです。</p>
     </div>
   </section>
 
@@ -194,27 +240,6 @@ footer{margin:46px 0 34px;text-align:center;font-size:12.5px;color:var(--muted);
     </div>
   </section>
 
-  <section>
-    <h2>はじめての方へ</h2>
-    <p class="note">途中で赤い警告が出ますが、こわれてはいません。2回押せば越えられます。</p>
-    <div class="first">
-      <h3>入り方（1分）</h3>
-      <ol>
-        <li>上の<span class="k">地図をひらく</span>を押します</li>
-        <li>Googleでログインします。<b>ふだん使っているアカウント</b>で構いません</li>
-        <li><b>「このアプリは Google で確認されていません」</b>と赤い字が出たら
-            <span class="k">詳細</span> → <span class="k">…（安全ではないページ）に移動</span> の順に押します</li>
-        <li>アクセスを求められたら <span class="k">許可</span></li>
-        <li>合言葉を入れます（LINEにあります）</li>
-      </ol>
-      <p class="why"><b>なぜ赤い警告が出るのか。</b>
-        仲間内だけで使う道具なので、Googleの審査を通していないからです。
-        審査には会社の登録や年ごとの費用が要ります。
-        中身は Google のサーバーで動いていて、書いたものはみんなの表に入るだけです。
-        いつでも <span class="k">不具合報告・要望</span> から聞いてください。</p>
-    </div>
-  </section>
-
   <a class="go" href="https://script.google.com/macros/s/AKfycbyfw2BBJGIAg-DFxko3UxaUt0eqhL2aaoSiE_jznkQiCfCYPQ6z_J8ezU6eO8598CI/exec">
     地図をひらく
     <small>2回目からは、ホーム画面に置いておくと一発です</small>
@@ -241,10 +266,25 @@ footer{margin:46px 0 34px;text-align:center;font-size:12.5px;color:var(--muted);
   var 地図 = document.querySelector('a.go').href;
   var 印   = document.getElementById('skip');
   var 留まる = location.search.indexOf('top=1') >= 0;
-  var 覚え;
-  try { 覚え = localStorage.getItem('すぐ地図'); } catch (e) { 覚え = null; }
+  var 覚え, 前に見た日;
+  try {
+    覚え = localStorage.getItem('すぐ地図');
+    前に見た日 = localStorage.getItem('前にここを見た日');
+  } catch (e) { 覚え = null; 前に見た日 = null; }
 
-  if (覚え === '1' && !留まる) { location.replace(地図); return; }
+  /* 「出さない」にした人にも、ひと月たったら一度だけ出す。
+     上の「このごろの話」が変わるので、それを見てもらうため。
+     毎回出すとうるさい。まったく出さないと、変わったことに気づけない。 */
+  var きょう = new Date();
+  var ひと月ぶり = !前に見た日
+    || (きょう - new Date(前に見た日)) > 30 * 24 * 60 * 60 * 1000;
+
+  if (覚え === '1' && !留まる && !ひと月ぶり) { location.replace(地図); return; }
+
+  try {
+    localStorage.setItem('前にここを見た日',
+      きょう.getFullYear() + '-' + (きょう.getMonth() + 1) + '-' + きょう.getDate());
+  } catch (e) {}
 
   印.checked = (覚え === '1');
   印.addEventListener('change', function(){
