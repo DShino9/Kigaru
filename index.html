@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>気軽に空撮＆練習マップ｜Flying Dreams</title>
+
+<!-- LINE や X に貼ったとき、中身が見えるようにする。
+     これが無いと、長いURLだけが届いて「怪しいリンク」に見える。 -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="気軽に空撮＆練習マップ">
+<meta property="og:description" content="「あそこ、飛ばしていいんだっけ？」に答える地図。73か所ぶんの、どこへ何を出すか・電話したら何と言われたかまで入っています。">
+<!-- LINE は絶対URLでないと絵を出さない。置き場を変えたら、ここも直すこと -->
+<meta property="og:image" content="https://dshino9.github.io/Kigaru/ogp.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="1200">
+<meta property="og:url" content="https://dshino9.github.io/Kigaru/">
+<meta property="og:site_name" content="Flying Dreams">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="ドローンを飛ばせる場所を、申請先と回答つきで集めた地図。飛行禁止空域・人口集中地区・送電線も重ねて見られます。">
+<meta name="theme-color" content="#2c6a4c">
+
+<!-- ホーム画面に置いたときの絵。
+     地図の本体（Google Apps Script）は枠の中で動くので、
+     そちらには置けない。この入り口ページなら置ける。 -->
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" sizes="512x512" href="icon-512.png">
+<link rel="icon" href="favicon.png">
+<meta name="apple-mobile-web-app-title" content="空撮マップ">
+
+<style>
+:root{
+  --ink:#1b1e1b; --muted:#5c635c; --line:#dfe3dc; --panel:#fff;
+  --bg:#eef1ec; --accent:#2c6a4c; --accent-d:#1f5138; --warn:#9a6516; --warn-bg:#fdf5e6;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.85 -apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  -webkit-text-size-adjust:100%}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+img{max-width:100%;height:auto}
+
+/* ---- 頭 ---- */
+.hero{background:linear-gradient(180deg,#8fc4d4 0%,#cfe4ea 55%,var(--bg) 100%);
+  padding:44px 0 30px;text-align:center}
+.hero .mark{width:96px;height:96px;border-radius:24px;box-shadow:0 6px 20px rgba(20,40,50,.25);
+  display:block;margin:0 auto 18px}
+.hero h1{margin:0 0 6px;font-size:27px;letter-spacing:.02em}
+.hero .fd{margin:0 0 18px;font-size:13px;color:#3d5a63;letter-spacing:.2em}
+.lead{margin:0 auto;max-width:22em;font-size:19px;font-weight:700;line-height:1.75}
+.lead b{color:var(--accent-d)}
+
+/* ---- 押すところ ---- */
+.go{display:block;max-width:420px;margin:26px auto 8px;padding:18px 24px;
+  background:var(--accent);color:#fff;text-decoration:none;text-align:center;
+  border-radius:14px;font-size:19px;font-weight:700;
+  box-shadow:0 5px 16px rgba(44,106,76,.35)}
+.go:active{background:var(--accent-d)}
+.go small{display:block;font-size:12px;font-weight:400;opacity:.9;margin-top:4px}
+.under{text-align:center;font-size:13px;color:var(--muted);margin:0 0 6px}
+
+/* ---- 数字 ---- */
+.nums{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:26px 0 4px}
+.nums div{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:12px 16px;min-width:104px;text-align:center}
+.nums b{display:block;font-size:26px;line-height:1.3;color:var(--accent-d)}
+.nums span{font-size:12px;color:var(--muted)}
+
+/* ---- 節 ---- */
+section{margin:40px 0}
+h2{font-size:20px;margin:0 0 6px;padding-left:11px;border-left:5px solid var(--accent)}
+h2+p.note{margin:0 0 18px;color:var(--muted);font-size:14px}
+
+/* ---- 落とし穴 ---- */
+.trap{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin:0 0 12px}
+.trap b{display:block;font-size:16px;margin-bottom:4px}
+.trap .p{color:#8c2f28;font-weight:700}
+.trap p{margin:6px 0 0;font-size:14.5px;color:#3a3f3a}
+.trap .who{margin-top:8px;font-size:12px;color:var(--muted)}
+
+/* ---- ピンの説明 ---- */
+.pins{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 10px}
+.pins figure{margin:0;width:23%;min-width:78px;text-align:center}
+.pins img{width:44px}
+.pins figcaption{font-size:12px;line-height:1.5;color:var(--muted);margin-top:2px}
+
+/* ---- 動画 ---- */
+.vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.vids a{display:block;text-decoration:none;color:inherit;
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.vids img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.vids span{display:block;padding:7px 10px;font-size:12.5px;line-height:1.5}
+
+/* ---- はじめての人 ---- */
+.first{background:var(--warn-bg);border:1px solid #e8d5ae;border-radius:14px;padding:18px 20px}
+.first h3{margin:0 0 10px;font-size:17px;color:var(--warn)}
+.first ol{margin:0;padding-left:1.4em}
+.first li{margin-bottom:12px}
+.first .k{display:inline-block;background:#fff;border:1px solid #ddd;border-radius:6px;
+  padding:1px 8px;font-weight:700;font-size:14px;margin:0 2px}
+.first .why{margin-top:14px;padding-top:12px;border-top:1px dashed #e0cba0;
+  font-size:13.5px;color:#6b5a38}
+
+/* ---- 足 ---- */
+footer{margin:46px 0 34px;text-align:center;font-size:12.5px;color:var(--muted);line-height:2}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <img class="mark" src="icon-512.png" alt="">
+    <p class="fd">FLYING DREAMS</p>
+    <h1>気軽に空撮＆練習マップ</h1>
+    <p class="lead">「あそこ、<b>飛ばしていいんだっけ？</b>」<br>を、みんなで持ち寄った地図です。</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <a class="go" href="https://script.google.com/macros/s/AKfycbyfw2BBJGIAg-DFxko3UxaUt0eqhL2aaoSiE_jznkQiCfCYPQ6z_J8ezU6eO8598CI/exec">
+    地図をひらく
+    <small>Googleでログインします。はじめての方は下の「はじめての方へ」を先に</small>
+  </a>
+  <p class="under">FDのメンバー向けです。合言葉はLINEにあります。</p>
+
+  <div class="nums">
+    <div><b>73</b><span>か所</span></div>
+    <div><b>34</b><span>本の空撮動画</span></div>
+    <div><b>7</b><span>種類の空域を自動判定</span></div>
+  </div>
+
+  <section>
+    <h2>知らないと、現地で詰みます</h2>
+    <p class="note">実際に申請して飛ばした人が書いた話が、そのまま入っています。</p>
+
+    <div class="trap">
+      <b>千畳敷カール（中央アルプス）</b>
+      <p class="p">燃料式のドローンと、本体やバッテリーが大きい機体は、ロープウェイに乗せられません。</p>
+      <p>知らずに行くと、標高2,600mまで上がってから詰みます。入林届は南信森林管理署、連絡書は中央アルプス観光へ。書類は2本立てです。</p>
+      <p class="who">2026年7月に実際に飛ばした記録より</p>
+    </div>
+
+    <div class="trap">
+      <b>諏訪湖（赤砂崎公園・みずべ公園）</b>
+      <p class="p">許可証は発行されません。書類が受理された時点で承認、という扱いです。</p>
+      <p>「許可証が届かない」と待っていると、当日を過ぎます。費用は使用料1,100円＋振込手数料165円＋郵送430円で、およそ1,700円。</p>
+      <p class="who">2026年7月に実際に飛ばした記録より</p>
+    </div>
+
+    <div class="trap">
+      <b>犬吠埼灯台（千葉）</b>
+      <p class="p">灯台の上は飛ばせません。海上保安庁の管轄だと言われたそうです。</p>
+      <p>浜辺からなら飛ばせます。こういう「行ってみて言われたこと」が、いちばん値打ちがあります。</p>
+      <p class="who">メンバーの投稿より</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>地図に出るもの</h2>
+    <p class="note">ピンの色と絵で、その場所がどういう場所かが分かります。</p>
+    <div class="pins">
+      <figure><img src="pin-roke.png" alt=""><figcaption>ロケ地</figcaption></figure>
+      <figure><img src="pin-renshu.png" alt=""><figcaption>練習場</figcaption></figure>
+      <figure><img src="pin-todo.png" alt=""><figcaption>直したい<br>ところ</figcaption></figure>
+      <figure><img src="pin-dame.png" alt=""><figcaption>もう<br>飛ばせない</figcaption></figure>
+    </div>
+    <div class="trap" style="margin-top:12px">
+      <b>重ねて見られるもの</b>
+      <p>飛行禁止空域7種類（空港のまわり・管制圏・民間訓練試験空域・特別管制区・進入管制区・レッドゾーン・イエローゾーン）／人口集中地区（DID）／<b>送電線</b>／空港・飛行場。</p>
+      <p>空域は国土交通省航空局と警察庁のデータそのものです。目安の円ではありません。<b>場所を開くと「何メートルより上が制限か」まで出ます。</b></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>どんなところがあるか</h2>
+    <p class="note">場所ごとに、空撮動画も付けてあります。</p>
+    <div class="vids">
+      <a href="https://www.youtube.com/watch?v=Mmx5ccqlPDQ"><img src="https://img.youtube.com/vi/Mmx5ccqlPDQ/mqdefault.jpg" alt="" loading="lazy"><span>東平安名崎（宮古島）</span></a>
+      <a href="https://www.youtube.com/watch?v=WI_MFE9N-Y4"><img src="https://img.youtube.com/vi/WI_MFE9N-Y4/mqdefault.jpg" alt="" loading="lazy"><span>芦ノ湖（箱根）</span></a>
+      <a href="https://www.youtube.com/watch?v=2Oi0Tu3HbMk"><img src="https://img.youtube.com/vi/2Oi0Tu3HbMk/mqdefault.jpg" alt="" loading="lazy"><span>松川浦（福島・相馬）</span></a>
+      <a href="https://www.youtube.com/watch?v=Yvuj-dnvDRU"><img src="https://img.youtube.com/vi/Yvuj-dnvDRU/mqdefault.jpg" alt="" loading="lazy"><span>平湯大滝（奥飛騨）</span></a>
+      <a href="https://www.youtube.com/watch?v=lYcTQEVXFlE"><img src="https://img.youtube.com/vi/lYcTQEVXFlE/mqdefault.jpg" alt="" loading="lazy"><span>長瀞（埼玉）</span></a>
+      <a href="https://www.youtube.com/watch?v=R5T02Bri1EY"><img src="https://img.youtube.com/vi/R5T02Bri1EY/mqdefault.jpg" alt="" loading="lazy"><span>辺戸岬（沖縄）</span></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>はじめての方へ</h2>
+    <p class="note">途中で赤い警告が出ますが、こわれてはいません。2回押せば越えられます。</p>
+    <div class="first">
+      <h3>入り方（1分）</h3>
+      <ol>
+        <li>上の<span class="k">地図をひらく</span>を押します</li>
+        <li>Googleでログインします。<b>ふだん使っているアカウント</b>で構いません</li>
+        <li><b>「このアプリは Google で確認されていません」</b>と赤い字が出たら
+            <span class="k">詳細</span> → <span class="k">…（安全ではないページ）に移動</span> の順に押します</li>
+        <li>アクセスを求められたら <span class="k">許可</span></li>
+        <li>合言葉を入れます（LINEにあります）</li>
+      </ol>
+      <p class="why"><b>なぜ赤い警告が出るのか。</b>
+        FDの中だけで使う道具なので、Googleの審査を通していないからです。
+        審査には会社の登録や年ごとの費用が要ります。
+        中身は Google のサーバーで動いていて、書いたものはFDのシートに入るだけです。
+        いつでも <span class="k">不具合報告・要望</span> から聞いてください。</p>
+    </div>
+  </section>
+
+  <a class="go" href="https://script.google.com/macros/s/AKfycbyfw2BBJGIAg-DFxko3UxaUt0eqhL2aaoSiE_jznkQiCfCYPQ6z_J8ezU6eO8598CI/exec">
+    地図をひらく
+    <small>2回目からは、ホーム画面に置いておくと一発です</small>
+  </a>
+
+  <footer>
+    Flying Dreams 空撮ロケハン支援ツール<br>
+    空域データ：国土交通省航空局・警察庁（国土地理院が配信）／送電線：OpenStreetMap<br>
+    <b>最後は必ず <a href="https://www.dips-reg.mlit.go.jp/" style="color:var(--accent-d)">DIPS</a> で確かめてください。</b>
+  </footer>
+
+</div>
+</body>
+</html>
