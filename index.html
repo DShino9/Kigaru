@@ -113,6 +113,18 @@ h2+p.note{margin:0 0 18px;color:var(--muted);font-size:14px}
   font-size:13.5px;color:var(--muted);cursor:pointer}
 .skip input{width:18px;height:18px;accent-color:var(--accent)}
 
+/* ---- 入り方の絵 ---- */
+.shot{margin:12px 0 4px;text-align:center}
+.shot img{width:100%;max-width:330px;border:1px solid #d9d2c0;border-radius:10px;
+  box-shadow:0 3px 10px rgba(0,0,0,.13)}
+.shot figcaption{margin-top:5px;font-size:11.5px;color:#8a7a58}
+/* 2枚目は実物が撮れないので、絵として描く。写真のように見せない */
+.mock{max-width:330px;margin:0 auto;background:#fff;border:2px dashed #c9b78e;
+  border-radius:10px;padding:14px 16px;text-align:left}
+.mock p{margin:0;font-size:13px;line-height:1.7;color:#5c635c}
+.mock .link{margin-top:10px;padding:9px 10px;background:#eef4ff;border-radius:7px;
+  color:#1a55c4;font-weight:700;font-size:13.5px;text-decoration:underline}
+
 /* ---- 足 ---- */
 footer{margin:46px 0 34px;text-align:center;font-size:12.5px;color:var(--muted);line-height:2}
 </style>
@@ -172,9 +184,21 @@ footer{margin:46px 0 34px;text-align:center;font-size:12.5px;color:var(--muted);
       <ol>
         <li>下の<span class="k">地図をひらく</span>を押します</li>
         <li>Googleでログインします。<b>ふだん使っているアカウント</b>で構いません</li>
-        <li><b>「このアプリは Google で確認されていません」</b>と赤い字が出たら<br>
-            <span class="k">詳細</span> を押す → 下に出てくる
-            <span class="k">気軽に空撮＆練習マップ（安全ではないページ）に移動</span> を押す</li>
+        <li><b>この画面が出ます。</b>赤枠のところを押してください
+          <figure class="shot">
+            <img src="warn-1.png" alt="このアプリは Google で確認されていません、という画面。左下の「詳細」を押す" loading="lazy">
+          </figure>
+        </li>
+        <li>「詳細」を押すと、<b>下にこの文字が出ます。</b>これを押します
+          <figure class="shot">
+            <div class="mock">
+              <p>Google ではこのアプリを確認していません。<br>
+                 続行するとリスクが生じる可能性があります。</p>
+              <p class="link">気軽に空撮＆練習マップ（安全ではないページ）に移動</p>
+            </div>
+            <figcaption>※ここは絵で描いたものです。字の並びは端末によって少し違います</figcaption>
+          </figure>
+        </li>
         <li>アクセスを求められたら <span class="k">許可</span></li>
         <li>合言葉を入れます（LINEにあります）</li>
       </ol>
