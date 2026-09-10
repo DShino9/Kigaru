@@ -50,13 +50,31 @@ img{max-width:100%;height:auto}
 .lead{margin:0 auto;max-width:22em;font-size:19px;font-weight:700;line-height:1.75}
 .lead b{color:var(--accent-d)}
 
-/* ---- 押すところ ---- */
-.go{display:block;max-width:420px;margin:26px auto 8px;padding:18px 24px;
-  background:var(--accent);color:#fff;text-decoration:none;text-align:center;
-  border-radius:14px;font-size:19px;font-weight:700;
-  box-shadow:0 5px 16px rgba(44,106,76,.35)}
-.go:active{background:var(--accent-d)}
-.go small{display:block;font-size:12px;font-weight:400;opacity:.9;margin-top:4px}
+/* ---- 押すところ（スマホのホーム画面のように並べる） ----
+     3つの道具の入り口。ここが玄関なので、必ず通る。
+     まだ無いものは灰色にして「準備中」と出す。
+     押せそうに見えて何も起きないのが、いちばん嫌われる。 */
+.apps{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;
+  max-width:420px;margin:26px auto 10px}
+.app{display:flex;flex-direction:column;align-items:center;gap:9px;
+  text-decoration:none;color:inherit;padding:10px 2px;border-radius:16px;
+  -webkit-tap-highlight-color:transparent}
+.app:active{background:rgba(44,106,76,.09)}
+.app:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.app .ic{width:74px;height:74px;border-radius:19px;display:grid;place-items:center;
+  box-shadow:0 5px 14px rgba(20,40,50,.22);position:relative}
+.app .ic svg{width:38px;height:38px;display:block}
+.app .nm{font-size:13.5px;font-weight:700;line-height:1.35;text-align:center}
+.ic-map{background:linear-gradient(160deg,#3f8560,#215239)}
+.ic-log{background:linear-gradient(160deg,#42748f,#26495f)}
+.ic-cal{background:linear-gradient(160deg,#d3d9d1,#b5beb3)}
+.ic-cal svg{stroke:#6d756b}
+.app.soon{cursor:default}
+.app.soon .ic{box-shadow:0 3px 9px rgba(20,40,50,.12)}
+.app.soon .nm{color:var(--muted);font-weight:400}
+.soon-tag{position:absolute;right:-4px;bottom:-5px;background:#fff;color:var(--muted);
+  border:1px solid var(--line);border-radius:9px;font-size:10px;font-weight:700;
+  padding:1px 6px;line-height:1.7;white-space:nowrap}
 .under{text-align:center;font-size:13px;color:var(--muted);margin:0 0 6px}
 
 /* ---- 数字 ---- */
@@ -107,12 +125,6 @@ h2+p.note{margin:0 0 18px;color:var(--muted);font-size:14px}
 .first .why{margin-top:14px;padding-top:12px;border-top:1px dashed #e0cba0;
   font-size:13.5px;color:#6b5a38}
 
-/* ---- 次から出さない ---- */
-.skip{display:flex;align-items:center;justify-content:center;gap:8px;
-  max-width:420px;margin:0 auto 10px;padding:9px 12px;
-  font-size:13.5px;color:var(--muted);cursor:pointer}
-.skip input{width:18px;height:18px;accent-color:var(--accent)}
-
 /* ---- 入り方の絵 ---- */
 .shot{margin:12px 0 4px;text-align:center}
 .shot img{width:100%;max-width:330px;border:1px solid #d9d2c0;border-radius:10px;
@@ -141,14 +153,39 @@ footer{margin:46px 0 34px;text-align:center;font-size:12.5px;color:var(--muted);
 
 <div class="wrap">
 
-  <a class="go" href="https://script.google.com/macros/s/AKfycbyfw2BBJGIAg-DFxko3UxaUt0eqhL2aaoSiE_jznkQiCfCYPQ6z_J8ezU6eO8598CI/exec">
-    地図をひらく
-    <small>Googleでログインします。はじめての方は、下の「はじめての方へ」を先にお読みください</small>
-  </a>
-  <label class="skip"><input type="checkbox" id="skip">
-    次からは、この画面を出さずに地図をひらく<br>
-    <span style="font-size:12px;opacity:.8">（ひと月に一度だけ、この画面が出ます）</span></label>
-  <p class="under">メンバー向けです。合言葉はLINEにあります。</p>
+  <nav class="apps" aria-label="道具をえらぶ">
+    <a class="app" href="https://script.google.com/macros/s/AKfycbyfw2BBJGIAg-DFxko3UxaUt0eqhL2aaoSiE_jznkQiCfCYPQ6z_J8ezU6eO8598CI/exec">
+      <span class="ic ic-map">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 3.6 3.6 5.9v14.5L9 18.1l6 2.3 5.4-2.3V3.6L15 5.9 9 3.6Z"/>
+          <path d="M9 3.6v14.5M15 5.9v14.5"/>
+        </svg>
+      </span>
+      <span class="nm">地図</span>
+    </a>
+    <span class="app soon" aria-disabled="true">
+      <span class="ic ic-cal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#6d756b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3.6" y="5.2" width="16.8" height="15.2" rx="2.6"/>
+          <path d="M3.6 10.1h16.8M8.2 3.2v4M15.8 3.2v4"/>
+        </svg>
+        <span class="soon-tag">準備中</span>
+      </span>
+      <span class="nm">カレンダー</span>
+    </span>
+    <a class="app" href="https://script.google.com/macros/s/AKfycbyfw2BBJGIAg-DFxko3UxaUt0eqhL2aaoSiE_jznkQiCfCYPQ6z_J8ezU6eO8598CI/exec?page=log">
+      <span class="ic ic-log">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6.3 3.7h11.2a1.6 1.6 0 0 1 1.6 1.6v13.4a1.6 1.6 0 0 1-1.6 1.6H6.3a1.8 1.8 0 0 1-1.8-1.8V5.5a1.8 1.8 0 0 1 1.8-1.8Z"/>
+          <path d="M4.5 16.7h14.6"/>
+          <path d="M8.1 7.7h7.3M8.1 11.3h7.3"/>
+        </svg>
+      </span>
+      <span class="nm">飛行日誌</span>
+    </a>
+  </nav>
+  <p class="under">Googleでログインします。メンバー向けです。合言葉はLINEにあります。<br>
+    はじめての方は、下の「はじめての方へ」を先にお読みください。</p>
 
   <div class="nums">
     <div><b>73</b><span>か所</span></div>
@@ -160,9 +197,7 @@ footer{margin:46px 0 34px;text-align:center;font-size:12.5px;color:var(--muted);
        このごろの話
 
        ここは月に一度くらい書き替える。
-       「次からこの画面を出さない」にした人にも、
-       ひと月たつと一度だけ出るようにしてあるので、
-       ここが古いままだと、わざわざ出した意味がなくなる。
+       この画面は必ず通るので、古いままだと毎回それを見せることになる。
 
        書くのは3つまで。多いと読まれない。
        ・場所が増えた／機能が増えた
@@ -182,7 +217,7 @@ footer{margin:46px 0 34px;text-align:center;font-size:12.5px;color:var(--muted);
       <p class="alert">途中で <b>赤い警告</b> が出ますが、こわれてはいません。<br>
         <b>2回押せば越えられます。</b></p>
       <ol>
-        <li>下の<span class="k">地図をひらく</span>を押します</li>
+        <li>いちばん上の<span class="k">地図</span>を押します</li>
         <li>Googleでログインします。<b>ふだん使っているアカウント</b>で構いません</li>
         <li><b>この画面が出ます。</b>赤枠のところを押してください
           <figure class="shot">
@@ -264,57 +299,46 @@ footer{margin:46px 0 34px;text-align:center;font-size:12.5px;color:var(--muted);
     </div>
   </section>
 
-  <a class="go" href="https://script.google.com/macros/s/AKfycbyfw2BBJGIAg-DFxko3UxaUt0eqhL2aaoSiE_jznkQiCfCYPQ6z_J8ezU6eO8598CI/exec">
-    地図をひらく
-    <small>2回目からは、ホーム画面に置いておくと一発です</small>
-  </a>
+  <nav class="apps" aria-label="道具をえらぶ">
+    <a class="app" href="https://script.google.com/macros/s/AKfycbyfw2BBJGIAg-DFxko3UxaUt0eqhL2aaoSiE_jznkQiCfCYPQ6z_J8ezU6eO8598CI/exec">
+      <span class="ic ic-map">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 3.6 3.6 5.9v14.5L9 18.1l6 2.3 5.4-2.3V3.6L15 5.9 9 3.6Z"/>
+          <path d="M9 3.6v14.5M15 5.9v14.5"/>
+        </svg>
+      </span>
+      <span class="nm">地図</span>
+    </a>
+    <span class="app soon" aria-disabled="true">
+      <span class="ic ic-cal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#6d756b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3.6" y="5.2" width="16.8" height="15.2" rx="2.6"/>
+          <path d="M3.6 10.1h16.8M8.2 3.2v4M15.8 3.2v4"/>
+        </svg>
+        <span class="soon-tag">準備中</span>
+      </span>
+      <span class="nm">カレンダー</span>
+    </span>
+    <a class="app" href="https://script.google.com/macros/s/AKfycbyfw2BBJGIAg-DFxko3UxaUt0eqhL2aaoSiE_jznkQiCfCYPQ6z_J8ezU6eO8598CI/exec?page=log">
+      <span class="ic ic-log">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6.3 3.7h11.2a1.6 1.6 0 0 1 1.6 1.6v13.4a1.6 1.6 0 0 1-1.6 1.6H6.3a1.8 1.8 0 0 1-1.8-1.8V5.5a1.8 1.8 0 0 1 1.8-1.8Z"/>
+          <path d="M4.5 16.7h14.6"/>
+          <path d="M8.1 7.7h7.3M8.1 11.3h7.3"/>
+        </svg>
+      </span>
+      <span class="nm">飛行日誌</span>
+    </a>
+  </nav>
+  <p class="under">ホーム画面に置いておくと、次からは一発で開けます。</p>
 
   <footer>
     空撮ロケハン支援ツール<br>
     空域データ：国土交通省航空局・警察庁（国土地理院が配信）／送電線：OpenStreetMap<br>
-    <b>最後は必ず <a href="https://www.dips-reg.mlit.go.jp/" style="color:var(--accent-d)">DIPS</a> で確かめてください。</b><br>
-    <span style="opacity:.8">この画面を出さない設定にしたあと、また見たいときは
-    <a href="?top=1" style="color:var(--accent-d)">?top=1</a> を付けて開いてください。</span>
+    <b>最後は必ず <a href="https://www.dips-reg.mlit.go.jp/" style="color:var(--accent-d)">DIPS</a> で確かめてください。</b>
   </footer>
 
 </div>
 
-<script>
-/* よく使う人が、毎回この画面を通らずに済むようにする。
-   ------------------------------------------------------------
-   はじめての人には説明が要るが、慣れた人には邪魔になる。
-   「次から出さない」に印を付けた人だけ、次からは地図へ直に送る。
-   勝手に飛ばすと驚かせるので、自分で選んだときだけにしてある。
-   また見たいときは ?top=1 を付ければ、ここに留まる。 */
-(function(){
-  var 地図 = document.querySelector('a.go').href;
-  var 印   = document.getElementById('skip');
-  var 留まる = location.search.indexOf('top=1') >= 0;
-  var 覚え, 前に見た日;
-  try {
-    覚え = localStorage.getItem('すぐ地図');
-    前に見た日 = localStorage.getItem('前にここを見た日');
-  } catch (e) { 覚え = null; 前に見た日 = null; }
-
-  /* 「出さない」にした人にも、ひと月たったら一度だけ出す。
-     上の「このごろの話」が変わるので、それを見てもらうため。
-     毎回出すとうるさい。まったく出さないと、変わったことに気づけない。 */
-  var きょう = new Date();
-  var ひと月ぶり = !前に見た日
-    || (きょう - new Date(前に見た日)) > 30 * 24 * 60 * 60 * 1000;
-
-  if (覚え === '1' && !留まる && !ひと月ぶり) { location.replace(地図); return; }
-
-  try {
-    localStorage.setItem('前にここを見た日',
-      きょう.getFullYear() + '-' + (きょう.getMonth() + 1) + '-' + きょう.getDate());
-  } catch (e) {}
-
-  印.checked = (覚え === '1');
-  印.addEventListener('change', function(){
-    try { localStorage.setItem('すぐ地図', 印.checked ? '1' : '0'); } catch (e) {}
-  });
-})();
-</script>
 </body>
 </html>
